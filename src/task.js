@@ -24,9 +24,3 @@ function filterByProject(taskList = taskList, projectName) {
     console.log(filterProject)
     return filterProject
 }
-
-newTask('Winner', 'Score a TD', 'Today', 'Sports', 'High');
-newTask('Loser', 'Get Scored On', 'Tomorrow', 'Sports', 'High');
-newTask('Food', 'Eat a Burger', 'Tonight', 'Food', 'Low');
-
-export { taskList, currentProject, filterByProject }

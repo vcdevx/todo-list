@@ -1,16 +1,25 @@
 import { taskList, currentTask, filterByProject, Task, filterProject } from "./task";
 
-const createTask = () => {
-    let taskFormFadeToBlack = document.createElement('div');
-    taskFormFadeToBlack.classList.add('taskFormFadeToBlack');
-    document.body.append(taskFormFadeToBlack);
 
-    let taskFormContainer = document.createElement('div');
-    taskFormContainer.classList.add('taskFormContainer');
-    taskFormContainer.append('taskFormFadeToBlack')
+const generateTask = () => {
+
+    let newTaskBtn = document.querySelector('.newTaskBtn');
+    
+    const createTask = () => {
+
+        let newTaskContainer = document.querySelector('.newTaskContainer');
+        
+        newTaskContainer.style.display = 'flex';
+        newTaskBtn.style.display = 'none';
+
+        let taskName = document.querySelector('#taskName');
+    }
+
+    newTaskBtn.addEventListener('click', createTask);
+    
+    
 }
 
-let taskListContainer = document.querySelector('.taskList')
 
 /*function displayTasks(listOfTasks) {
     filterProject.forEach(element => {
@@ -33,4 +42,4 @@ let taskListContainer = document.querySelector('.taskList')
 }*/
 
 
-export {  }
+export { generateTask }

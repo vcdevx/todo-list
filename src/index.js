@@ -1,6 +1,5 @@
-import { taskList, filterByProject } from './task'
-import { displayTasks } from './DOM'
+import { Task } from './task'
+import { displayTasks, generateTask } from './DOM'
 
-console.log(taskList)
-filterByProject(taskList, 'Sports');
-displayTasks(filterByProject);
+
+generateTask();

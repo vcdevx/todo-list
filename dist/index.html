@@ -10,18 +10,18 @@
     <title>To-Do App</title>
 </head>
 <body>
-    <div class="taskFormFadeToBlack">
-        <div class="taskFormContainer">
-            <form action="">
-                
-            </form>
-        </div>
-    </div>
     <header>
     </header>
     <main>
         <div class="sidebar">
             <h1>Projects</h1>
+            <div class="newProjectContainer">
+                <form action="">
+                    <input type="text" name="projectName" id="projectName" placeholder="Project Name">
+                    <button type="button">Confirm</button>
+                    <button type="button">Cancel</button>
+                </form>
+            </div>
             <button class="newProjectBtn">New Project</button>
             <div class="projectList">
                 <div class="project">HI</div>
@@ -29,6 +29,19 @@
         </div>
         <div class="listContainer">
             <button class="newTaskBtn">New Task </button>
+            <div class="newTaskContainer">
+                <form action="">
+                    <input type="text" name="taskName" id="taskName" placeholder="Task Info">
+                    <input type="date" name="date" id="taskDate" placeholder="Date">
+                    <select name="priority" id="priority">
+                        <option value="" disabled selected>Select Priority</option>
+                        <option value="high">High</option>
+                        <option value="low">Low</option>
+                    </select>
+                    <button type="button" class="confirmTaskBtn">Confirm</button>
+                    <button type="button" class="cancelTaskBtn">Cancel</button>
+                </form>
+            </div>
             <div class="taskList">
                 <!--<div class="task"><span class="material-symbols-outlined">radio_button_unchecked</span>YEET</div>
                 <div class="task"><span class="material-symbols-outlined">radio_button_unchecked</span>YEET</div>
