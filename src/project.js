@@ -4,4 +4,6 @@ export class Project {
     }
 }
 
-const currentProject = "default";
+let projectList = [];
+
+export { projectList }

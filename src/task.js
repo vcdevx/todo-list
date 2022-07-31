@@ -1,9 +1,8 @@
 import { Project } from "./project";
 
 export class Task {
-    constructor(title, description, dueDate, projectTitle, priority) {
+    constructor(title, dueDate, projectTitle, priority) {
         this.title = title;
-        this.description = description;
         this.dueDate = dueDate;
         this.projectTitle = projectTitle;
         this.priority = priority;
@@ -11,16 +10,12 @@ export class Task {
 }
 
 const taskList = [];
-let currentProject = '';
+let currentProject = 'default';
 
-function newTask(title, description, dueDate, projectTitle, priority) {
-    let addTask = new Task(title, description, dueDate, projectTitle, priority);
-    taskList.push(addTask)
+function filterByProject() {
+    let filterProject = taskList.filter(val => val.projectTitle.includes(currentProject));
+    console.log(filterProject);
+    return filterProject;
 }
 
-function filterByProject(taskList = taskList, projectName) {
-    currentProject = projectName;
-    const filterProject = taskList.filter(val => val.projectTitle.includes(currentProject));
-    console.log(filterProject)
-    return filterProject
-}
+export { currentProject, filterByProject, taskList }

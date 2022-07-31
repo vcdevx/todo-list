@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <link rel="stylesheet" href="style.css">
     <script src="main.js" defer></script>
     <title>To-Do App</title>
@@ -18,8 +20,8 @@
             <div class="newProjectContainer">
                 <form action="">
                     <input type="text" name="projectName" id="projectName" placeholder="Project Name">
-                    <button type="button">Confirm</button>
-                    <button type="button">Cancel</button>
+                    <button type="button" class="confirmProjectBtn">Confirm</button>
+                    <button type="button" class="cancelProjectBtn">Cancel</button>
                 </form>
             </div>
             <button class="newProjectBtn">New Project</button>
@@ -33,7 +35,7 @@
                 <form action="">
                     <input type="text" name="taskName" id="taskName" placeholder="Task Info">
                     <input type="date" name="date" id="taskDate" placeholder="Date">
-                    <select name="priority" id="priority">
+                    <select name="priority" id="prioritySelector">
                         <option value="" disabled selected>Select Priority</option>
                         <option value="high">High</option>
                         <option value="low">Low</option>
@@ -43,9 +45,9 @@
                 </form>
             </div>
             <div class="taskList">
-                <!--<div class="task"><span class="material-symbols-outlined">radio_button_unchecked</span>YEET</div>
+                <div class="task"><span class="material-symbols-outlined">radio_button_unchecked</span><p class="taskTitle">PLAY FOOTBALL</p><p class="taskDate">07-30-2022</p><span class="material-symbols-outlined">delete</span><span class="material-symbols-outlined">keyboard_double_arrow_down</span></div>
                 <div class="task"><span class="material-symbols-outlined">radio_button_unchecked</span>YEET</div>
-                <div class="task"><span class="material-symbols-outlined">radio_button_unchecked</span>YEET</div>-->
+                <div class="task"><span class="material-symbols-outlined">radio_button_unchecked</span>YEET</div>
             </div>
         </div>
     </main>
