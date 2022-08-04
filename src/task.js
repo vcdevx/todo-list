@@ -10,7 +10,7 @@ export class Task {
 }
 
 const taskList = [];
-let currentProject = 'default';
+let currentProject = 'New Project';
 
 function filterByProject() {
     let filterProject = taskList.filter(val => val.projectTitle.includes(currentProject));

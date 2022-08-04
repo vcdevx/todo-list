@@ -5,5 +5,6 @@ export class Project {
 }
 
 let projectList = [];
+let defaultProject = new Project('New Project');
 
-export { projectList }
+export { projectList, defaultProject }

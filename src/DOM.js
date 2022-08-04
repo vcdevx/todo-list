@@ -1,5 +1,5 @@
 import { Project, projectList } from "./project";
-import { taskList, currentTask, filterByProject, filterProject, Task, currentProject, newTask } from "./task";
+import { taskList, filterByProject, Task, currentProject } from "./task";
 
 
 const generateTask = () => {
@@ -9,9 +9,14 @@ const generateTask = () => {
 
 
     newTaskBtn.addEventListener('click', function() {
-        newTaskContainer.style.display = 'flex';
-        newTaskBtn.style.display = 'none';
-    });
+
+        if (projectList.length === 0) {
+            alert('Please create a project first!')
+        } else {
+            newTaskContainer.style.display = 'flex';
+            newTaskBtn.style.display = 'none';
+        }
+    }); 
     
 
     let confirmTaskBtn =  document.querySelector('.confirmTaskBtn');
@@ -48,11 +53,13 @@ const generateTask = () => {
 
 const displayTasks = () => {
     let taskListContainer = document.querySelector('.taskList');
+    let i = 0;
 
     filterByProject().forEach(element => {
-
         let task = document.createElement('div');
         task.dataset.index = i;
+        console.log(i);
+        i++
         task.classList.add('task');
         taskListContainer.append(task);
 
@@ -69,15 +76,19 @@ const displayTasks = () => {
         taskDate.textContent = element.dueDate;
 
         let taskDelete = document.createElement('span');
-        taskDelete.classList.add('material-symbols-outlined');
+        taskDelete.classList.add('material-symbols-outlined', 'deleteTaskBtn');
         taskDelete.textContent = 'delete';
 
         let taskArrow = document.createElement('span');
         taskArrow.classList.add('material-symbols-outlined');
         taskArrow.textContent = 'keyboard_double_arrow_down';
 
+        if(element.priority == 'high') {
+            task.style.backgroundColor = 'red';
+        }
+
         task.append(taskCheck, taskTitle, taskDate, taskDelete, taskArrow);
-    });
+    }); 
 }
 
 const resetTaskList = () => {
@@ -104,6 +115,10 @@ const generateProject = () => {
 
         let addProjects = new Project(title);
         projectList.push(addProjects);
+        currentProject = title;
+
+        resetProjectList();
+        displayProjects();
         
         const inputs = document.querySelectorAll('#projectName');
         inputs.forEach(input => {
@@ -120,5 +135,85 @@ const generateProject = () => {
     });
 }
 
+const displayProjects = () => {
+    let projectListContainer = document.querySelector('.projectList');
+    let i = 0;
 
-export { generateTask, generateProject }
+    projectList.forEach(element => {
+
+        let project = document.createElement('div');
+        project.classList.add('project');
+        projectListContainer.append(project);
+        project.dataset.index = i;
+        console.log(i);
+        i++
+
+        let projectTitle = document.createElement('p');
+        projectTitle.classList.add('taskTitle');
+        projectTitle.textContent = element.title;
+
+        let projectDelete = document.createElement('span');
+        projectDelete.classList.add('material-symbols-outlined', 'deleteProjectBtn');
+        projectDelete.textContent = 'delete';
+
+        project.append(projectTitle, projectDelete);  
+    });
+}
+
+const resetProjectList = () => {
+
+    let projectListContainer = document.querySelector('.projectList');
+    projectListContainer.innerHTML = '';
+}
+
+
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('project')) {
+
+        let projectName = event.target.querySelector('.taskTitle').textContent;
+
+        currentProject = projectName;
+        resetTaskList();
+        displayTasks(taskList);
+    }
+})
+
+//Delete buttons for task and project
+
+document.addEventListener('click', function (event) {
+
+    let task = document.querySelector('.task');
+
+    if (event.target.classList.contains('deleteTaskBtn')) {
+        event.stopPropagation();
+        taskList.splice(task.dataset.index, 1);
+        event.target.closest('.task').remove();
+        resetTaskList();
+        console.log(taskList);
+    }
+})
+
+document.addEventListener('click', function (event) {
+
+    let project = document.querySelector('.project');
+
+    if (event.target.classList.contains('deleteProjectBtn')) {
+        event.stopPropagation();
+        projectList.splice(project.dataset.index, 1);
+        event.target.closest('.project').remove();
+        resetTaskList();
+        console.log(projectList);
+    }
+})
+
+// Event listener for checking off tasks
+
+document.addEventListener('click', (event) => {
+
+    let checkTask = document.querySelector('.checkTask');
+
+    if (event.target.classList.contains('.checkTask')) {
+        event.stopPropagation();
+    }
+})
+export { generateTask, generateProject, displayTasks, displayProjects }
