@@ -1,5 +1,6 @@
 import { Project, projectList } from "./project";
 import { taskList, filterByProject, Task, currentProject } from "./task";
+import { saveTaskToLocalStorage, getTask, clearLocalStorage, saveProjectToLocalStorage } from "./storage";
 
 
 const generateTask = () => {
@@ -31,6 +32,8 @@ const generateTask = () => {
         let addTasks = new Task(title, dueDate, projectTitle, priority);
         console.log(taskList);
         taskList.push(addTasks);
+        saveTaskToLocalStorage(taskList);
+        console.log(localStorage);
         resetTaskList();
         displayTasks(taskList);
         
@@ -63,13 +66,18 @@ const displayTasks = () => {
         task.classList.add('task');
         taskListContainer.append(task);
 
+        let taskTitleContainer = document.createElement('div');
+        taskTitleContainer.classList.add('taskTitleContainer');
+
         let taskCheck = document.createElement('span');
-        taskCheck.classList.add('material-symbols-outlined');
+        taskCheck.classList.add('material-symbols-outlined', 'taskCheck');
         taskCheck.textContent = 'radio_button_unchecked';
 
         let taskTitle = document.createElement('p');
         taskTitle.classList.add('taskTitle');
         taskTitle.textContent = element.title;
+
+        taskTitleContainer.append(taskCheck, taskTitle)
 
         let taskDate = document.createElement('p');
         taskDate.classList.add('taskDate');
@@ -79,26 +87,24 @@ const displayTasks = () => {
         taskDelete.classList.add('material-symbols-outlined', 'deleteTaskBtn');
         taskDelete.textContent = 'delete';
 
-        let taskArrow = document.createElement('span');
-        taskArrow.classList.add('material-symbols-outlined');
-        taskArrow.textContent = 'keyboard_double_arrow_down';
+        let taskEdit = document.createElement('span');
+        taskEdit.classList.add('material-symbols-outlined', 'taskEdit');
+        taskEdit.textContent = 'edit_square';
 
         if(element.priority == 'high') {
-            task.style.backgroundColor = 'red';
+            task.classList.add('highPriority');
         }
 
-        task.append(taskCheck, taskTitle, taskDate, taskDelete, taskArrow);
+        task.append(taskTitleContainer, taskDate, taskDelete);
     }); 
 }
 
 const resetTaskList = () => {
-
     let taskListContainer = document.querySelector('.taskList');
     taskListContainer.innerHTML = '';
 }
 
 const generateProject = () => {
-
     let newProjectBtn = document.querySelector('.newProjectBtn');
     let newProjectContainer = document.querySelector('.newProjectContainer');
     
@@ -116,6 +122,8 @@ const generateProject = () => {
         let addProjects = new Project(title);
         projectList.push(addProjects);
         currentProject = title;
+
+        saveProjectToLocalStorage(projectList);
 
         resetProjectList();
         displayProjects();
@@ -187,9 +195,9 @@ document.addEventListener('click', function (event) {
     if (event.target.classList.contains('deleteTaskBtn')) {
         event.stopPropagation();
         taskList.splice(task.dataset.index, 1);
+        saveTaskToLocalStorage(taskList);
         event.target.closest('.task').remove();
         resetTaskList();
-        console.log(taskList);
     }
 })
 
@@ -200,20 +208,28 @@ document.addEventListener('click', function (event) {
     if (event.target.classList.contains('deleteProjectBtn')) {
         event.stopPropagation();
         projectList.splice(project.dataset.index, 1);
+        saveProjectToLocalStorage(projectList);
         event.target.closest('.project').remove();
         resetTaskList();
-        console.log(projectList);
     }
 })
 
 // Event listener for checking off tasks
 
-document.addEventListener('click', (event) => {
+document.addEventListener('click', function (event) {
 
-    let checkTask = document.querySelector('.checkTask');
+    let taskCheck = document.querySelector('.taskCheck');
 
-    if (event.target.classList.contains('.checkTask')) {
+    if (event.target.classList.contains('taskCheck')) {
+        if (event.target.textContent == 'check_circle') {
         event.stopPropagation();
+        event.target.classList.remove('taskCheckTrue');
+        event.target.textContent = 'radio_button_unchecked';
+        } else {
+            event.stopPropagation();
+            event.target.classList.add('taskCheckTrue');
+            event.target.textContent = 'check_circle';
+        }
     }
 })
 export { generateTask, generateProject, displayTasks, displayProjects }

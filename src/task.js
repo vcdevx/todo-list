@@ -9,8 +9,8 @@ export class Task {
     }
 }
 
-const taskList = [];
-let currentProject = 'New Project';
+let taskList = [];
+let currentProject = [];
 
 function filterByProject() {
     let filterProject = taskList.filter(val => val.projectTitle.includes(currentProject));

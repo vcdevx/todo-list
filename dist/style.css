@@ -119,6 +119,14 @@ main {
     border: 2px black solid;
 }
 
+.highPriority {
+    background-color: orange;
+}
+
+.taskCheckTrue {
+    color: green;
+}
+
 .newProjectContainer {
     display: none;
     margin: 25px 0 50px 0;
