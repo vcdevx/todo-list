@@ -1,6 +1,6 @@
 import { Project, projectList } from "./project";
 import { taskList, filterByProject, Task, currentProject } from "./task";
-import { saveTaskToLocalStorage, getTask, clearLocalStorage, saveProjectToLocalStorage } from "./storage";
+import { saveTaskToLocalStorage, saveCurrentProject, saveProjectToLocalStorage } from "./storage";
 
 
 const generateTask = () => {
@@ -13,6 +13,8 @@ const generateTask = () => {
 
         if (projectList.length === 0) {
             alert('Please create a project first!')
+        } else if (currentProject === null) {
+            alert('Please create or select an existing project!')
         } else {
             newTaskContainer.style.display = 'flex';
             newTaskBtn.style.display = 'none';
@@ -27,12 +29,12 @@ const generateTask = () => {
         let title = document.querySelector('#taskName').value;
         let dueDate = document.querySelector('#taskDate').value;
         let priority = document.querySelector('#prioritySelector').value;
-        let projectTitle = currentProject;    
+        let projectTitle = currentProject;
+        let isComplete = false; 
 
-        let addTasks = new Task(title, dueDate, projectTitle, priority);
+        let addTasks = new Task(title, dueDate, projectTitle, priority, isComplete);
         console.log(taskList);
         taskList.push(addTasks);
-        saveTaskToLocalStorage(taskList);
         console.log(localStorage);
         resetTaskList();
         displayTasks(taskList);
@@ -44,6 +46,7 @@ const generateTask = () => {
   
         newTaskContainer.style.display = 'none'; 
         newTaskBtn.style.display = 'inline';
+        saveTaskToLocalStorage(taskList);
     });
 
     cancelTaskBtn.addEventListener('click', function() {
@@ -54,16 +57,16 @@ const generateTask = () => {
 
 }
 
+
 const displayTasks = () => {
     let taskListContainer = document.querySelector('.taskList');
-    let i = 0;
+
+    let taskIndex = 0;
 
     filterByProject().forEach(element => {
         let task = document.createElement('div');
-        task.dataset.index = i;
-        console.log(i);
-        i++
-        task.classList.add('task');
+        task.dataset.index = taskIndex;
+        task.classList.add('task', 'lowPriority');
         taskListContainer.append(task);
 
         let taskTitleContainer = document.createElement('div');
@@ -86,16 +89,61 @@ const displayTasks = () => {
         let taskDelete = document.createElement('span');
         taskDelete.classList.add('material-symbols-outlined', 'deleteTaskBtn');
         taskDelete.textContent = 'delete';
+        taskDelete.dataset.index = taskIndex;
+        taskIndex++;
+
 
         let taskEdit = document.createElement('span');
         taskEdit.classList.add('material-symbols-outlined', 'taskEdit');
         taskEdit.textContent = 'edit_square';
 
         if(element.priority == 'high') {
+            task.classList.remove('lowPriority');
             task.classList.add('highPriority');
         }
 
+        if(element.isComplete == true) {
+            task.classList.add('completeTask');
+            taskCheck.classList.add('taskCheckTrue');
+            taskCheck.textContent = 'check_circle';
+        }
+
         task.append(taskTitleContainer, taskDate, taskDelete);
+
+        taskDelete.addEventListener('click', function (event) {
+
+            if (event.target.classList.contains('deleteTaskBtn')) {
+                event.stopPropagation();
+                console.log(taskDelete.dataset.index);
+                taskList.splice(taskDelete.dataset.index, 1);
+                event.target.closest('.task').remove();
+                resetTaskList();
+                displayTasks();
+                saveTaskToLocalStorage(taskList);
+            }
+        });
+
+        taskCheck.addEventListener('click', function (event) {
+            if (event.target.classList.contains('taskCheck')) {
+                if (taskList[taskDelete.dataset.index].isComplete == false) {
+                event.stopPropagation();
+                event.target.classList.add('taskCheckTrue');
+                taskList[taskDelete.dataset.index].isComplete = true;
+                resetTaskList();
+                displayTasks();
+                saveTaskToLocalStorage(taskList);
+                } else {
+                    event.stopPropagation();
+                    event.target.classList.remove('taskCheckTrue');
+                    event.target.textContent = 'radio_button_unchecked';
+                    taskList[taskDelete.dataset.index].isComplete = false;
+                    resetTaskList();
+                    displayTasks();
+                    saveTaskToLocalStorage(taskList);
+                }
+            }
+        })
+
     }); 
 }
 
@@ -123,10 +171,10 @@ const generateProject = () => {
         projectList.push(addProjects);
         currentProject = title;
 
-        saveProjectToLocalStorage(projectList);
-
         resetProjectList();
         displayProjects();
+        resetTaskList();
+        displayTasks();
         
         const inputs = document.querySelectorAll('#projectName');
         inputs.forEach(input => {
@@ -135,6 +183,9 @@ const generateProject = () => {
   
         newProjectContainer.style.display = 'none'; 
         newProjectBtn.style.display = 'inline';
+
+        saveProjectToLocalStorage(projectList);
+        saveCurrentProject(currentProject);
     });
 
     cancelProjectBtn.addEventListener('click', function() {
@@ -143,18 +194,18 @@ const generateProject = () => {
     });
 }
 
+
 const displayProjects = () => {
     let projectListContainer = document.querySelector('.projectList');
-    let i = 0;
+    let projectIndex = 0;
 
     projectList.forEach(element => {
 
         let project = document.createElement('div');
         project.classList.add('project');
         projectListContainer.append(project);
-        project.dataset.index = i;
-        console.log(i);
-        i++
+        project.dataset.index = projectIndex;
+        projectIndex++
 
         let projectTitle = document.createElement('p');
         projectTitle.classList.add('taskTitle');
@@ -164,7 +215,38 @@ const displayProjects = () => {
         projectDelete.classList.add('material-symbols-outlined', 'deleteProjectBtn');
         projectDelete.textContent = 'delete';
 
-        project.append(projectTitle, projectDelete);  
+        project.append(projectTitle, projectDelete);
+
+        projectDelete.addEventListener('click', function (event) {
+            const projectNameTarget = event.target.previousElementSibling.textContent.toString();
+
+            if (event.target.classList.contains('deleteProjectBtn')) {
+                event.stopPropagation();
+                console.log(project.dataset.index);
+                projectList.splice(project.dataset.index, 1);
+                console.log(projectNameTarget);
+
+                function removeTaskByProjectName (projectName, tasks){
+                    for (let i = tasks.length - 1; i >= 0; i--) {
+                        if (tasks[i].projectTitle === projectName) {
+                            tasks.splice(i, 1);
+                        } 
+                    }
+                }
+                
+                event.target.closest('.project').remove();
+                removeTaskByProjectName(projectNameTarget, taskList);
+                resetProjectList();
+                displayProjects();
+                resetTaskList();
+                displayTasks();
+                saveProjectToLocalStorage(projectList);
+                saveTaskToLocalStorage(taskList);
+                console.log(projectList);
+                console.log(event.target.previousElementSibling.textContent.toString())
+            }
+        })
+
     });
 }
 
@@ -186,50 +268,5 @@ document.addEventListener('click', function(event) {
     }
 })
 
-//Delete buttons for task and project
 
-document.addEventListener('click', function (event) {
-
-    let task = document.querySelector('.task');
-
-    if (event.target.classList.contains('deleteTaskBtn')) {
-        event.stopPropagation();
-        taskList.splice(task.dataset.index, 1);
-        saveTaskToLocalStorage(taskList);
-        event.target.closest('.task').remove();
-        resetTaskList();
-    }
-})
-
-document.addEventListener('click', function (event) {
-
-    let project = document.querySelector('.project');
-
-    if (event.target.classList.contains('deleteProjectBtn')) {
-        event.stopPropagation();
-        projectList.splice(project.dataset.index, 1);
-        saveProjectToLocalStorage(projectList);
-        event.target.closest('.project').remove();
-        resetTaskList();
-    }
-})
-
-// Event listener for checking off tasks
-
-document.addEventListener('click', function (event) {
-
-    let taskCheck = document.querySelector('.taskCheck');
-
-    if (event.target.classList.contains('taskCheck')) {
-        if (event.target.textContent == 'check_circle') {
-        event.stopPropagation();
-        event.target.classList.remove('taskCheckTrue');
-        event.target.textContent = 'radio_button_unchecked';
-        } else {
-            event.stopPropagation();
-            event.target.classList.add('taskCheckTrue');
-            event.target.textContent = 'check_circle';
-        }
-    }
-})
 export { generateTask, generateProject, displayTasks, displayProjects }

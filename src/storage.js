@@ -1,5 +1,7 @@
-import { taskList } from "./task";
+import { currentProject, taskList } from "./task";
 import { projectList } from "./project";
+
+// Tasks local storage
 
 
 const saveTaskToLocalStorage = (task) => {
@@ -37,4 +39,16 @@ const getProjects = () => {
     }
 }
 
-export { saveTaskToLocalStorage, getTasks, clearLocalStorage, saveProjectToLocalStorage, getProjects }
+const saveCurrentProject = (projectName) => {
+    localStorage.setItem('currentProject', JSON.stringify(projectName))
+}
+
+const getCurrentProject = () => {
+    if(localStorage.getItem('currentProject') === null) {
+        currentProject = '';
+    } else {
+        currentProject = JSON.parse(localStorage.getItem('currentProject'));
+    }
+}
+
+export { saveTaskToLocalStorage, getTasks, clearLocalStorage, saveProjectToLocalStorage, getProjects, saveCurrentProject, getCurrentProject }
