@@ -3,9 +3,6 @@ import { displayTasks, displayProjects, generateProject, generateTask } from './
 import { projectList, defaultProject } from './project';
 import { getCurrentProject, getProjects, getTasks } from './storage';
 
-
-console.log(projectList);
-
 getProjects();
 getTasks();
 getCurrentProject();

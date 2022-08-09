@@ -12,6 +12,10 @@
 </head>
 <body>
     <header>
+        <span class="material-symbols-outlined menuBtn">menu</span>
+        <div class="currentProjectContainer">
+            <p class="currentProjectHeader"></p>
+        </div>
     </header>
     <main>
         <div class="sidebar">
@@ -30,15 +34,15 @@
         <div class="listContainer">
             <button class="newTaskBtn">New Task <span class="material-symbols-outlined addSpan">add</span></button>
             <div class="newTaskContainer">
-                <form action="">
-                    <input type="text" name="taskName" id="taskName" placeholder="Task Info">
-                    <input type="date" name="date" id="taskDate" placeholder="Date">
-                    <select name="priority" id="prioritySelector">
+                <form action="" id="newTaskForm">
+                    <input type="text" name="taskName" id="taskName" placeholder="Task Info" required>
+                    <input type="date" name="date" id="taskDate" placeholder="Date" required>
+                    <select name="priority" id="prioritySelector" required>
                         <option value="" disabled selected>Select Priority</option>
                         <option value="high">High</option>
                         <option value="low">Low</option>
                     </select>
-                    <button type="button" class="confirmTaskBtn">Confirm</button>
+                    <button type="submit" class="confirmTaskBtn" form="newTaskForm">Confirm</button>
                     <button type="button" class="cancelTaskBtn">Cancel</button>
                 </form>
             </div>
